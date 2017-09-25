@@ -36,178 +36,178 @@ let human_value = function (price) {
 
 //-----------------------------------------------------------------------------
 
-let testTicker = async (exchange, symbol) => {
+// let testTicker = async (exchange, symbol) => {
 
-    if (exchange.hasFetchTicker) {
+//     if (exchange.hasFetchTicker) {
 
-        log (symbol.green, 'fetching ticker...')
+//         log (symbol.green, 'fetching ticker...')
 
-        let ticker = await exchange.fetchTicker (symbol)
-        const keys = [ 'datetime', 'timestamp', 'high', 'low', 'bid', 'ask', 'quoteVolume' ]
+//         let ticker = await exchange.fetchTicker (symbol)
+//         const keys = [ 'datetime', 'timestamp', 'high', 'low', 'bid', 'ask', 'quoteVolume' ]
 
-        keys.forEach (key => assert (key in ticker))
+//         keys.forEach (key => assert (key in ticker))
 
-        log (symbol.green, 'ticker',
-            ticker['datetime'],
-            ... (keys.map (key =>
-                key + ': ' + human_value (ticker[key]))))
+//         log (symbol.green, 'ticker',
+//             ticker['datetime'],
+//             ... (keys.map (key =>
+//                 key + ': ' + human_value (ticker[key]))))
 
-        if (exchange.id != 'coinmarketcap')
-            assert (ticker['bid'] <= ticker['ask'])
+//         if (exchange.id != 'coinmarketcap')
+//             assert (ticker['bid'] <= ticker['ask'])
 
 
 
-    } else {
+//     } else {
 
-        log (symbol.green, 'fetchTicker () not supported')
-    }
-}
+//         log (symbol.green, 'fetchTicker () not supported')
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testOrderBook = async (exchange, symbol) => {
+// let testOrderBook = async (exchange, symbol) => {
 
-    log (symbol.green, 'fetching order book...')
+//     log (symbol.green, 'fetching order book...')
 
-    let orderbook = await exchange.fetchOrderBook (symbol)
+//     let orderbook = await exchange.fetchOrderBook (symbol)
 
-    const format = {
-        'bids': [],
-        'asks': [],
-        'timestamp': 1234567890,
-        'datetime': '2017-09-01T00:00:00',
-    };
+//     const format = {
+//         'bids': [],
+//         'asks': [],
+//         'timestamp': 1234567890,
+//         'datetime': '2017-09-01T00:00:00',
+//     };
 
-    expect (orderbook).to.have.all.keys (format)
+//     expect (orderbook).to.have.all.keys (format)
 
-    log (symbol.green,
-        orderbook['datetime'],
-        'bid: '       + ((orderbook.bids.length > 0) ? human_value (orderbook.bids[0][0]) : 'N/A'),
-        'bidVolume: ' + ((orderbook.bids.length > 0) ? human_value (orderbook.bids[0][1]) : 'N/A'),
-        'ask: '       + ((orderbook.asks.length > 0) ? human_value (orderbook.asks[0][0]) : 'N/A'),
-        'askVolume: ' + ((orderbook.asks.length > 0) ? human_value (orderbook.asks[0][1]) : 'N/A'))
+//     log (symbol.green,
+//         orderbook['datetime'],
+//         'bid: '       + ((orderbook.bids.length > 0) ? human_value (orderbook.bids[0][0]) : 'N/A'),
+//         'bidVolume: ' + ((orderbook.bids.length > 0) ? human_value (orderbook.bids[0][1]) : 'N/A'),
+//         'ask: '       + ((orderbook.asks.length > 0) ? human_value (orderbook.asks[0][0]) : 'N/A'),
+//         'askVolume: ' + ((orderbook.asks.length > 0) ? human_value (orderbook.asks[0][1]) : 'N/A'))
 
-    const bids = orderbook.bids
-    const asks = orderbook.asks
+//     const bids = orderbook.bids
+//     const asks = orderbook.asks
 
-    if (bids.length > 1)
-        assert (bids[0][0] >= bids[bids.length - 1][0])
+//     if (bids.length > 1)
+//         assert (bids[0][0] >= bids[bids.length - 1][0])
 
-    if (asks.length > 1)
-        assert (asks[0][0] <= asks[asks.length - 1][0])
+//     if (asks.length > 1)
+//         assert (asks[0][0] <= asks[asks.length - 1][0])
 
-    if (bids.length && asks.length)
-        assert (bids[0][0] <= asks[0][0])
+//     if (bids.length && asks.length)
+//         assert (bids[0][0] <= asks[0][0])
 
-    return orderbook
-}
+//     return orderbook
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testTrades = async (exchange, symbol) => {
+// let testTrades = async (exchange, symbol) => {
 
-    if (exchange.hasFetchTrades) {
+//     if (exchange.hasFetchTrades) {
 
-        log (symbol.green, 'fetching trades...')
+//         log (symbol.green, 'fetching trades...')
 
-        let trades = await exchange.fetchTrades (symbol)
+//         let trades = await exchange.fetchTrades (symbol)
 
-        log (symbol.green, 'fetched', Object.values (trades).length.toString ().green, 'trades')
+//         log (symbol.green, 'fetched', Object.values (trades).length.toString ().green, 'trades')
 
-    } else {
+//     } else {
 
-        log (symbol.green, 'fetchTrades () not supported'.yellow);
-    }
-}
+//         log (symbol.green, 'fetchTrades () not supported'.yellow);
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testTickers = async (exchange) => {
+// let testTickers = async (exchange) => {
 
-    if (exchange.hasFetchTickers) {
+//     if (exchange.hasFetchTickers) {
 
-        log ('fetching all tickers at once...')
-        let tickers = await exchange.fetchTickers ()
-        log ('fetched', Object.keys (tickers).length.toString ().green, 'tickers')
+//         log ('fetching all tickers at once...')
+//         let tickers = await exchange.fetchTickers ()
+//         log ('fetched', Object.keys (tickers).length.toString ().green, 'tickers')
 
-    } else {
+//     } else {
 
-        log ('fetching all tickers at once not supported')
-    }
-}
+//         log ('fetching all tickers at once not supported')
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testOHLCV = async (exchange, symbol) => {
+// let testOHLCV = async (exchange, symbol) => {
 
-    if (exchange.hasFetchOHLCV) {
+//     if (exchange.hasFetchOHLCV) {
 
-        log (symbol.green, 'fetching OHLCV...')
-        let ohlcv = await exchange.fetchOHLCV (symbol)
-        log (symbol.green, 'fetched', Object.keys (ohlcv).length.toString ().green, 'OHLCVs')
+//         log (symbol.green, 'fetching OHLCV...')
+//         let ohlcv = await exchange.fetchOHLCV (symbol)
+//         log (symbol.green, 'fetched', Object.keys (ohlcv).length.toString ().green, 'OHLCVs')
 
-    } else {
+//     } else {
 
-        log ('fetching OHLCV not supported')
-    }
-}
+//         log ('fetching OHLCV not supported')
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testSymbol = async (exchange, symbol) => {
+// let testSymbol = async (exchange, symbol) => {
 
-    await testTicker (exchange, symbol)
-    await testTickers (exchange)
-    await testOHLCV (exchange, symbol)
-    await testTrades (exchange, symbol)
+//     await testTicker (exchange, symbol)
+//     await testTickers (exchange)
+//     await testOHLCV (exchange, symbol)
+//     await testTrades (exchange, symbol)
 
-    if (exchange.id == 'coinmarketcap') {
+//     if (exchange.id == 'coinmarketcap') {
 
-        log (await exchange.fetchTickers ())
-        log (await exchange.fetchGlobal ())
+//         log (await exchange.fetchTickers ())
+//         log (await exchange.fetchGlobal ())
 
-    } else {
+//     } else {
 
-        await testOrderBook (exchange, symbol)
+//         await testOrderBook (exchange, symbol)
 
-    }
-}
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testOrders = async (exchange, symbol) => {
+// let testOrders = async (exchange, symbol) => {
 
-    if (exchange.hasFetchOrders) {
+//     if (exchange.hasFetchOrders) {
 
-        log ('fetching orders...')
-        let orders = await exchange.fetchOrders (symbol)
-        log ('fetched', orders.length.toString ().green, 'orders')
-        log (asTable (orders))
+//         log ('fetching orders...')
+//         let orders = await exchange.fetchOrders (symbol)
+//         log ('fetched', orders.length.toString ().green, 'orders')
+//         log (asTable (orders))
 
-    } else {
+//     } else {
 
-        log ('fetching orders not supported')
-    }
-}
+//         log ('fetching orders not supported')
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
-let testMyTrades = async (exchange, symbol) => {
+// let testMyTrades = async (exchange, symbol) => {
 
-    if (exchange.hasFetchMyTrades) {
+//     if (exchange.hasFetchMyTrades) {
 
-        log ('fetching my trades...')
-        let trades = await exchange.fetchMyTrades (symbol)
-        log ('fetched', trades.length.toString ().green, 'trades')
-        log (asTable (trades))
+//         log ('fetching my trades...')
+//         let trades = await exchange.fetchMyTrades (symbol)
+//         log ('fetched', trades.length.toString ().green, 'trades')
+//         log (asTable (trades))
 
-    } else {
+//     } else {
 
-        log ('fetching trades not supported')
-    }
-}
+//         log ('fetching trades not supported')
+//     }
+// }
 
-//-----------------------------------------------------------------------------
+// //-----------------------------------------------------------------------------
 
 
 
