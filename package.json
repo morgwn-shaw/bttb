@@ -16,6 +16,7 @@
     "test": "npm run build && node run-tests",
     "fasttest": "node run-tests --js",
     "test-base": "mocha --reporter spec test/test_base.js",
+    "test-kraken": "env EXCHANGE=kraken mocha test/test.js --timeout 5000 --reporter ololog/reporter --watch",
     "export-exchanges": "node export-exchanges",
     "update-badges": "node update-badges",
     "mdrst": "pandoc --wrap=preserve --columns=10000 --from=markdown --to=rst --output=README.rst README.md",
@@ -31,13 +32,13 @@
   "devDependencies": {
     "ansicolor": "^1.1.68",
     "as-table": "^1.0.22",
-    "asciichart": "^1.5.1",
+    "asciichart": "^1.5.2",
     "browserify": "^14.4.0",
     "chai": "^4.1.2",
     "coveralls": "^2.13.1",
     "istanbul": "^0.4.5",
     "mocha": "^3.5.3",
-    "nyc": "^11.0.3",
+    "nyc": "^11.2.1",
     "ololog": "^1.0.33"
   },
   "author": {
