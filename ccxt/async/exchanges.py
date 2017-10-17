@@ -18811,7 +18811,11 @@ class yobit (btce):
                     lowercase = currencies[i]
                     uppercase = lowercase.upper()
                     currency = self.common_currency_code(uppercase)
-                    account = self.extend(self.account(), result[currency])
+                    account = None
+                    if currency in result:
+                        account = result[currency]
+                    else:
+                        account = self.account()
                     account[key] = balances[side][currency]
                     if account['total'] and account['free']:
                         account['used'] = account['total'] - account['free']
