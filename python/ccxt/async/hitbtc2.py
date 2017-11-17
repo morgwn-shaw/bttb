@@ -313,6 +313,15 @@ class hitbtc2 (hitbtc):
         symbol = market['symbol']
         amount = self.safe_float(order, 'quantity')
         filled = self.safe_float(order, 'cumQuantity')
+        status = order['status']
+        if status == 'new':
+            status = 'open'
+        elif status == 'suspended':
+            status = 'open'
+        elif status == 'partiallyFilled':
+            status = 'open'
+        elif status == 'filled':
+            status = 'closed'
         remaining = None
         if amount and filled:
             remaining = amount - filled
