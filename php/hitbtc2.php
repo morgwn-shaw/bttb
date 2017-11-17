@@ -125,28 +125,39 @@ class hitbtc2 extends hitbtc {
             $id = $market['id'];
             $base = $market['baseCurrency'];
             $quote = $market['quoteCurrency'];
-            $lot = $market['quantityIncrement'];
-            $step = floatval ($market['tickSize']);
             $base = $this->common_currency_code($base);
             $quote = $this->common_currency_code($quote);
             $symbol = $base . '/' . $quote;
+            $lot = floatval ($market['quantityIncrement']);
+            $step = floatval ($market['tickSize']);
             $precision = array (
-                'price' => 2,
-                'amount' => -1 * log10($step),
+                'price' => $this->precision_from_string($market['tickSize']),
+                'amount' => $this->precision_from_string($market['quantityIncrement']),
             );
-            $amountLimits = array ( 'min' => $lot );
-            $limits = array ( 'amount' => $amountLimits );
-            $result[] = array (
+            $result[] = array_merge ($this->fees['trading'], array (
+                'info' => $market,
                 'id' => $id,
                 'symbol' => $symbol,
                 'base' => $base,
                 'quote' => $quote,
                 'lot' => $lot,
                 'step' => $step,
-                'info' => $market,
                 'precision' => $precision,
-                'limits' => $limits,
-            );
+                'limits' => array (
+                    'amount' => array (
+                        'min' => $lot,
+                        'max' => null,
+                    ),
+                    'price' => array (
+                        'min' => $step,
+                        'max' => null,
+                    ),
+                    'cost' => array (
+                        'min' => null,
+                        'max' => null,
+                    ),
+                ),
+            ));
         }
         return $result;
     }
@@ -290,12 +301,11 @@ class hitbtc2 extends hitbtc {
             'clientOrderId' => (string) $clientOrderId,
             'symbol' => $market['id'],
             'side' => $side,
-            'quantity' => (string) $amount,
+            'quantity' => $this->amount_to_precision($symbol, $amount),
             'type' => $type,
         );
         if ($type == 'limit') {
-            $price = floatval ($price);
-            $order['price'] = sprintf ('%10f', $price);
+            $order['price'] = $this->price_to_precision($symbol, $price);
         } else {
             $order['timeInForce'] = 'FOK';
         }
