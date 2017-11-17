@@ -333,6 +333,16 @@ module.exports = class hitbtc2 extends hitbtc {
         let symbol = market['symbol'];
         let amount = this.safeFloat (order, 'quantity');
         let filled = this.safeFloat (order, 'cumQuantity');
+        let status = order['status'];
+        if (status == 'new') {
+            status = 'open';
+        } else if (status == 'suspended') {
+            status = 'open';
+        } else if (status == 'partiallyFilled') {
+            status = 'open';
+        } else if (status == 'filled') {
+            status = 'closed';
+        }
         let remaining = undefined;
         if (amount && filled)
             remaining = amount - filled;
