@@ -128,27 +128,38 @@ module.exports = class hitbtc2 extends hitbtc {
             let id = market['id'];
             let base = market['baseCurrency'];
             let quote = market['quoteCurrency'];
-            let lot = market['quantityIncrement'];
-            let step = parseFloat (market['tickSize']);
             base = this.commonCurrencyCode (base);
             quote = this.commonCurrencyCode (quote);
             let symbol = base + '/' + quote;
+            let lot = parseFloat (market['quantityIncrement']);
+            let step = parseFloat (market['tickSize']);
             let precision = {
-                'price': 2,
-                'amount': -1 * Math.log10(step),
+                'price': this.precisionFromString (market['tickSize']),
+                'amount': this.precisionFromString (market['quantityIncrement']),
             };
-            let amountLimits = { 'min': lot };
-            let limits = { 'amount': amountLimits };
             result.push ({
+                'info': market,
                 'id': id,
                 'symbol': symbol,
                 'base': base,
                 'quote': quote,
                 'lot': lot,
                 'step': step,
-                'info': market,
                 'precision': precision,
-                'limits': limits,
+                'limits': {
+                    'amount': {
+                        'min': lot,
+                        'max': undefined,
+                    },
+                    'price': {
+                        'min': step,
+                        'max': undefined,
+                    },
+                    'cost': {
+                        'min': undefined,
+                        'max': undefined,
+                    },
+                },
             });
         }
         return result;
@@ -293,12 +304,11 @@ module.exports = class hitbtc2 extends hitbtc {
             'clientOrderId': clientOrderId.toString (),
             'symbol': market['id'],
             'side': side,
-            'quantity': amount.toString (),
+            'quantity': this.amountToPrecision (symbol, amount),
             'type': type,
         };
         if (type == 'limit') {
-            price = parseFloat (price);
-            order['price'] = price.toFixed (10);
+            order['price'] = this.priceToPrecision (symbol, price);
         } else {
             order['timeInForce'] = 'FOK';
         }
