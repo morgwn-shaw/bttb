@@ -330,6 +330,16 @@ class hitbtc2 extends hitbtc {
         $symbol = $market['symbol'];
         $amount = $this->safe_float($order, 'quantity');
         $filled = $this->safe_float($order, 'cumQuantity');
+        $status = $order['status'];
+        if ($status == 'new') {
+            $status = 'open';
+        } else if ($status == 'suspended') {
+            $status = 'open';
+        } else if ($status == 'partiallyFilled') {
+            $status = 'open';
+        } else if ($status == 'filled') {
+            $status = 'closed';
+        }
         $remaining = null;
         if ($amount && $filled)
             $remaining = $amount - $filled;
