@@ -706,7 +706,8 @@ module.exports = class Exchange {
     }
 
     precisionFromString (string) {
-        return string.replace (/0+$/g, '').split ('.')[1].length;
+        const split = string.replace (/0+$/g, '').split ('.')
+        return (split.length > 1) ? (split[1].length) : 0
     }
 
     costToPrecision (symbol, cost) {
