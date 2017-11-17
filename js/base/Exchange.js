@@ -22,7 +22,9 @@ const { ExchangeError
       , RequestTimeout
       , ExchangeNotAvailable } = require ('./errors')
 
-const journal = isNode && require ('./journal')
+// stub until we get a better solution for Webpack and React
+// const journal = isNode && require ('./journal')
+const journal = undefined
 
 module.exports = class Exchange {
 
