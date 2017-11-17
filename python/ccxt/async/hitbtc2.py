@@ -2,7 +2,6 @@
 
 from ccxt.async.hitbtc import hitbtc
 import base64
-import math
 from ccxt.base.errors import ExchangeError
 
 
@@ -125,28 +124,39 @@ class hitbtc2 (hitbtc):
             id = market['id']
             base = market['baseCurrency']
             quote = market['quoteCurrency']
-            lot = market['quantityIncrement']
-            step = float(market['tickSize'])
             base = self.common_currency_code(base)
             quote = self.common_currency_code(quote)
             symbol = base + '/' + quote
+            lot = float(market['quantityIncrement'])
+            step = float(market['tickSize'])
             precision = {
-                'price': 2,
-                'amount': -1 * math.log10(step),
+                'price': self.precision_from_string(market['tickSize']),
+                'amount': self.precision_from_string(market['quantityIncrement']),
             }
-            amountLimits = {'min': lot}
-            limits = {'amount': amountLimits}
-            result.append({
+            result.append(self.extend(self.fees['trading'], {
+                'info': market,
                 'id': id,
                 'symbol': symbol,
                 'base': base,
                 'quote': quote,
                 'lot': lot,
                 'step': step,
-                'info': market,
                 'precision': precision,
-                'limits': limits,
-            })
+                'limits': {
+                    'amount': {
+                        'min': lot,
+                        'max': None,
+                    },
+                    'price': {
+                        'min': step,
+                        'max': None,
+                    },
+                    'cost': {
+                        'min': None,
+                        'max': None,
+                    },
+                },
+            }))
         return result
 
     async def fetch_balance(self, params={}):
@@ -277,12 +287,11 @@ class hitbtc2 (hitbtc):
             'clientOrderId': str(clientOrderId),
             'symbol': market['id'],
             'side': side,
-            'quantity': str(amount),
+            'quantity': self.amount_to_precision(symbol, amount),
             'type': type,
         }
         if type == 'limit':
-            price = float(price)
-            order['price'] = '{:.10f}'.format(price)
+            order['price'] = self.price_to_precision(symbol, price)
         else:
             order['timeInForce'] = 'FOK'
         response = await self.privatePostOrder(self.extend(order, params))
