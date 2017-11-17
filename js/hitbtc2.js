@@ -137,7 +137,7 @@ module.exports = class hitbtc2 extends hitbtc {
                 'price': this.precisionFromString (market['tickSize']),
                 'amount': this.precisionFromString (market['quantityIncrement']),
             };
-            result.push ({
+            result.push (this.extend (this.fees['trading'], {
                 'info': market,
                 'id': id,
                 'symbol': symbol,
@@ -160,7 +160,7 @@ module.exports = class hitbtc2 extends hitbtc {
                         'max': undefined,
                     },
                 },
-            });
+            }));
         }
         return result;
     }
